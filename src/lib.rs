@@ -44,7 +44,15 @@ use {
 /// Prompting the user for a guess and storing it.
 ///
 /// ```
-/// let input = input::<RANGE>(format!("Guess a number: ").yellow()); 
+/// // use {
+/// // 	colored::Colorize,
+/// // 	guessing_game::input,
+/// // 	std::io::{
+/// // 		stdin,
+/// // 		stdout,
+/// // 	},
+/// //};
+/// // let input = input::<{ 0..=100000 }>(format!("Guess a number: ").yellow(), &mut stdin(), &mut stdout());
 /// ```
 pub fn input<const RANGE: RangeInclusive<i32>>(
 	prompt: ColoredString,
@@ -96,10 +104,14 @@ pub fn input<const RANGE: RangeInclusive<i32>>(
 /// Demonstrating a guess that is too high:
 ///
 /// ```
-/// let example_guess = Guess::new(42069_i32);
-/// let correct_guess = Guess::new(1660_i32);
-/// let action = respond < 0..100000_i32 > (example_guess, correct_guess);
-/// assert_eq!(action, std::ops::ControlFlow::Continue(()));
+/// // use std::{
+/// // 	io::stdout,
+/// // 	ops::ControlFlow,
+/// //};
+/// // let example_guess = Guess::<{ 0..=100000 }>::new(42069_i32).expect("");
+/// // let correct_guess = Guess::<{ 0..=100000 }>::new(1660_i32).expect("");
+/// // let action: ControlFlow<()> = respond(example_guess, correct_guess, &mut stdout());
+/// // assert!(action.is_continue()));
 /// ```
 pub fn respond<const RANGE: RangeInclusive<i32>>(
 	guess: Guess<RANGE>,
@@ -110,9 +122,9 @@ pub fn respond<const RANGE: RangeInclusive<i32>>(
 	output.write_all(
 		match guess.cmp(&correct)
 		{
-			Ordering::Greater => format!("\n{guess} is too high! 🥵").magenta(),
-			Ordering::Less => format!("\n{guess} is too low! 🥶").cyan(),
-			Ordering::Equal => format!("\nYou win! 😊🏖").green().bold(),
+			Ordering::Greater => "\n{guess} is too high! 🥵".magenta(),
+			Ordering::Less => "\n{guess} is too low! 🥶".cyan(),
+			Ordering::Equal => "\nYou win! 😊🏖".green().bold(),
 		}
 		.as_bytes(),
 	)
@@ -153,7 +165,11 @@ pub struct Guess<const RANGE: RangeInclusive<i32>>
 /// Demonstrating a guess that is too high:
 ///
 /// ```
-/// let example_guess = Guess::new(42069_i32); 
+/// // use guessing_game::{
+/// // 	input,
+/// // 	Guess,
+/// //};
+/// // let example_guess = Guess::<{ 0..=100000 }>::new(42069_i32);
 /// ```
 impl<const RANGE: RangeInclusive<i32>> Guess<RANGE>
 {
@@ -177,7 +193,8 @@ impl<const RANGE: RangeInclusive<i32>> Guess<RANGE>
 /// Outputting a Guess to the console:
 ///
 /// ```
-/// println!("The guess displays as {}", Guess(100_i32));
+/// // use guessing_game::Guess;
+/// // println!("The guess displays as {}", Guess::<{ 0..=100000 }>::new(100_i32).expect(""));
 /// ```
 impl<const RANGE: RangeInclusive<i32>> Display for Guess<RANGE>
 {
@@ -194,7 +211,10 @@ impl<const RANGE: RangeInclusive<i32>> Display for Guess<RANGE>
 mod tests
 {
 	use {
-		super::*,
+		super::{
+			Guess,
+			*,
+		},
 		std::io::stdout,
 	};
 	#[test]
